@@ -16,16 +16,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MessageService implements BaseService<MessageDto,Message> {
+public class MessageService implements BaseService<MessageDto,Message,Long> {
     private final MessageRepository messageRepository;
-    private final MessageFactory messageFactory;
     @Autowired
     private MessageMapper mapper;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, MessageFactory messageFactory) {
+    public MessageService(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
-        this.messageFactory=messageFactory;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class MessageService implements BaseService<MessageDto,Message> {
 
     @Override
     @Transactional(readOnly = true)
-    public Message findById(long id) {
+    public Message findById(Long id) {
         Optional<Message> optional=messageRepository.findById(id);
         return optional.orElse(null);
     }
@@ -51,13 +49,6 @@ public class MessageService implements BaseService<MessageDto,Message> {
         return messageRepository.save(object);
     }
 
-    @Override
-    @Transactional
-    public Message update(Message object) {
-        if (!messageRepository.isExistById(object.getId()))
-            throw new EntityNotFoundException(object.getId()+" id has not found in message table");
-        return messageRepository.save(object);
-    }
 
     @Override
     @Transactional

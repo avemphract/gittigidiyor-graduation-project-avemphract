@@ -21,6 +21,11 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CreditApplicationCustomerNullException.class)
+    public ResponseEntity<ErrorDto> handleException(CreditApplicationCustomerNullException e){
+        return new ResponseEntity<>(errorService.saveException(e,HttpStatus.BAD_REQUEST),HttpStatus.BAD_REQUEST);
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ErrorDto> handleException(EntityAlreadyExistsException e) {
         return new ResponseEntity<>(errorService.saveException(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);

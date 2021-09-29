@@ -6,6 +6,7 @@ import dev.patika.creditscoreserver.business.dto.CreditScoreDto;
 import dev.patika.creditscoreserver.business.mappers.CreditScoreMapper;
 import dev.patika.creditscoreserver.entities.CreditScore;
 import dev.patika.creditscoreserver.repositories.CreditScoreRepository;
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,8 @@ public class CreditScoreService implements BaseService<CreditScoreDto,CreditScor
     @Override
     public List<CreditScore> findAll() {
         List<CreditScore> list = new ArrayList<>();
-        creditScoreRepository.findAll().forEach(list::add);
+        creditScoreRepository.findAll().forEach(e->list.add(e));
+        System.out.println(list);
         return list;
     }
 
@@ -57,8 +59,7 @@ public class CreditScoreService implements BaseService<CreditScoreDto,CreditScor
                     creditScore=2000;
                     break;
                 default:
-                    throw new RuntimeException();
-
+                    throw new NotImplementedException();
             }
             save(new CreditScore(tcNumber,creditScore));
         }
@@ -68,14 +69,14 @@ public class CreditScoreService implements BaseService<CreditScoreDto,CreditScor
     @Override
     public CreditScore save(CreditScore object) {
         if (creditScoreRepository.isExistByTcNumber(object.getTcNumber()))
-            throw new PersonCreditScoreAlreadyExistsException();
+            throw new PersonCreditScoreAlreadyExistsException("Tc: "+object.getTcNumber()+" already registered");
         return creditScoreRepository.save(object);
     }
 
     @Override
     public CreditScore update(CreditScore object) {
         if (!creditScoreRepository.isExistByTcNumber(object.getTcNumber()))
-            throw new PersonCreditScoreNotFoundException();
+            throw new PersonCreditScoreNotFoundException("Object not found which has got "+object.getTcNumber()+" tc number");
         return creditScoreRepository.save(object);
     }
 
@@ -83,7 +84,7 @@ public class CreditScoreService implements BaseService<CreditScoreDto,CreditScor
     public CreditScore delete(CreditScore object) {
         CreditScore creditScore=creditScoreRepository.findByTcNumber(object.getTcNumber());
         if (creditScore==null)
-            throw new PersonCreditScoreNotFoundException();
+            throw new PersonCreditScoreNotFoundException("Object not found which has got "+object.getTcNumber()+" tc number");
         creditScoreRepository.delete(creditScore);
         return object;
     }

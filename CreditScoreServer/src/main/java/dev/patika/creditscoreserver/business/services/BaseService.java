@@ -18,14 +18,14 @@ public interface BaseService<T extends BaseDto,E extends BaseEntity> {
     T toDto(E e);
     default List<T> toDto(List<E> list){
         List<T> result=new ArrayList<>();
-        list.forEach(this::toDto);
+        list.forEach(e->result.add(toDto(e)));
         return result;
     }
     E toEntity(T t);
 
     default List<E> toEntity(List<T> list){
         List<E> result=new ArrayList<>();
-        list.forEach(this::toEntity);
+        list.forEach(t -> result.add(toEntity(t)));
         return result;
     }
 }

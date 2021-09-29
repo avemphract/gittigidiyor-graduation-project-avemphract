@@ -22,7 +22,9 @@ public class CreditScoreController implements BaseController<CreditScoreDto,Long
     @Override
     @GetMapping
     public ResponseEntity<List<CreditScoreDto>> findAll() {
-        return ResponseEntity.ok(creditScoreService.toDto(creditScoreService.findAll()));
+        ResponseEntity<List<CreditScoreDto>> r=ResponseEntity.ok(creditScoreService.toDto(creditScoreService.findAll()));
+        System.out.println(r);
+        return r;
     }
 
     @Override
@@ -38,19 +40,19 @@ public class CreditScoreController implements BaseController<CreditScoreDto,Long
 
     @Override
     @PostMapping
-    public ResponseEntity<CreditScoreDto> save(@RequestParam CreditScoreDto body) {
+    public ResponseEntity<CreditScoreDto> save(@RequestBody CreditScoreDto body) {
         return ResponseEntity.ok(creditScoreService.toDto(creditScoreService.save(creditScoreService.toEntity(body))));
     }
 
     @Override
     @PutMapping
-    public ResponseEntity<CreditScoreDto> update(@RequestParam CreditScoreDto body) {
+    public ResponseEntity<CreditScoreDto> update(@RequestBody CreditScoreDto body) {
         return ResponseEntity.ok(creditScoreService.toDto(creditScoreService.update(creditScoreService.toEntity(body))));
     }
 
     @Override
     @DeleteMapping
-    public ResponseEntity<CreditScoreDto> delete(@RequestParam CreditScoreDto body) {
+    public ResponseEntity<CreditScoreDto> delete(@RequestBody CreditScoreDto body) {
         return ResponseEntity.ok(creditScoreService.toDto(creditScoreService.delete(creditScoreService.toEntity(body))));
     }
 }

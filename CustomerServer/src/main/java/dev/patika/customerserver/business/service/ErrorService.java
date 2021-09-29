@@ -5,6 +5,7 @@ import dev.patika.customerserver.business.mapper.ErrorMapper;
 import dev.patika.customerserver.entities.ErrorEntity;
 import dev.patika.customerserver.repositories.ErrorRepository;
 import dev.patika.customerserver.utils.RequestInfo;
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ErrorService implements BaseService<ErrorDto, ErrorEntity> {
+public class ErrorService implements BaseService<ErrorDto, ErrorEntity,String> {
 
     @Autowired
     private ErrorMapper errorMapper;
@@ -28,13 +29,11 @@ public class ErrorService implements BaseService<ErrorDto, ErrorEntity> {
 
     @Override
     public List<ErrorEntity> findAll() {
-        List<ErrorEntity> errorEntityList=new ArrayList<>();
-        errorRepository.findAll().forEach(errorEntityList::add);
-        return errorEntityList;
+        return new ArrayList<>(errorRepository.findAll());
     }
 
     @Override
-    public ErrorEntity findById(long id) {
+    public ErrorEntity findById(String id) {
         return errorRepository.findById(id).orElse(null);
     }
 

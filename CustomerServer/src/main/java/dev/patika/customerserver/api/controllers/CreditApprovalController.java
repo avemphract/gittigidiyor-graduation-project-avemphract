@@ -31,6 +31,11 @@ public class CreditApprovalController implements BaseController<CreditApprovalDt
         return ResponseEntity.ok(creditApprovalService.toDto(creditApprovalService.findById(id)));
     }
 
+    @GetMapping("/tc/{tc}")
+    public ResponseEntity<List<CreditApprovalDto>> findByCustomer(@PathVariable Long tc){
+        return ResponseEntity.ok(creditApprovalService.toDto(creditApprovalService.findByCustomer(tc)));
+    }
+
     @Override
     @PostMapping
     public ResponseEntity<CreditApprovalDto> save(@RequestBody CreditApprovalDto body) {

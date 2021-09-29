@@ -1,0 +1,63 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+  eureka-server:
+    build: EurekaServer
+    container_name: eureka-server
+    network_mode: bridge
+    ports:
+      - 8761:8761
+    expose:
+      - 8761
+  credit-score-server:
+    build: CreditScoreServer
+    container_name: credit-score-server
+    network_mode: bridge
+    depends_on:
+      - eureka-server
+    links:
+      - eureka-server
+    ports:
+      - 8082:8082
+    environment:
+      - spring.h2.console.settings.web-allow-others=true
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka
+  customer-server:
+    build: CustomerServer
+    container_name: customer-server
+    network_mode: bridge
+    depends_on:
+      - eureka-server
+    links:
+      - eureka-server
+      - credit-score-server
+    ports:
+      - 8083:8083
+    environment:
+      - spring.data.mongodb.host=host.docker.internal
+      - eureka.client.serviceUrl.defaultZone=http://eureka-server:8761/eureka
+volumes:
+  data: {}
+
+networks:
+  default:
+    name: mongodb_network

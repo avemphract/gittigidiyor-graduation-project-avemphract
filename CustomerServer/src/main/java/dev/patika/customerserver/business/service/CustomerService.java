@@ -21,36 +21,35 @@ import java.util.List;
 import static dev.patika.customerserver.validators.CustomerValidator.*;
 
 @Service
-public class CustomerService implements BaseService<CustomerDto,Customer> {
+public class CustomerService implements BaseService<CustomerDto,Customer,Long> {
 
     private final CustomerRepository customerRepository;
     private final CreditScoreClient creditScoreClient;
     private final CreditApprovalService creditApprovalService;
     @Autowired
     private CustomerMapper mapper;
-    @Autowired
-    private CreditApprovalMapper creditApprovalMapper;
+
+    private final CreditApprovalMapper creditApprovalMapper;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, CreditScoreClient creditScoreClient, CreditApprovalService creditApprovalService) {
+    public CustomerService(CustomerRepository customerRepository, CreditScoreClient creditScoreClient, CreditApprovalService creditApprovalService, CreditApprovalMapper creditApprovalMapper) {
         this.customerRepository = customerRepository;
         this.creditScoreClient = creditScoreClient;
         this.creditApprovalService = creditApprovalService;
+        this.creditApprovalMapper=creditApprovalMapper;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Customer> findAll() {
-        System.out.println("CustomerStream: "+customerRepository.findAll());
         List<Customer> customerList = new ArrayList<>();
         customerRepository.findAll().forEach(customerList::add);
-        System.out.println("CustomerList: "+customerList);
         return customerList;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Customer findById(long id) {
+    public Customer findById(Long id) {
         return customerRepository.findById(id).orElse(null);
     }
 
@@ -99,7 +98,7 @@ public class CustomerService implements BaseService<CustomerDto,Customer> {
         Customer databaseCustomer = customerRepository.findByTckn(customer.getTcNumber());
         if (databaseCustomer == null)
             customer=save(customer);
-        else if (!mapper.toDto(databaseCustomer).equals(databaseCustomer))
+        else
             customer=update(customer);
 
         CreditApproval creditApproval = new CreditApproval();
@@ -110,10 +109,10 @@ public class CustomerService implements BaseService<CustomerDto,Customer> {
         if (1000 < creditScoreDto.getCreditScore()) {
             creditApproval.setApproval(true);
             creditApproval.setGivenCreditAmount(customer.getSalary() * 4);
-        } else if (500 < creditScoreDto.getCreditScore() && 5000 < customer.getSalary()) {
+        } else if (500 <= creditScoreDto.getCreditScore() && 5000 < customer.getSalary()) {
             creditApproval.setApproval(true);
             creditApproval.setGivenCreditAmount(20000);
-        }else if (500 < creditScoreDto.getCreditScore()){
+        }else if (500 <= creditScoreDto.getCreditScore()){
             creditApproval.setApproval(true);
             creditApproval.setGivenCreditAmount(10000);
         }else {
@@ -131,4 +130,5 @@ public class CustomerService implements BaseService<CustomerDto,Customer> {
     public Customer toEntity(CustomerDto customerDto) {
         return mapper.toEntity(customerDto);
     }
+
 }

@@ -1,25 +1,24 @@
 package dev.patika.customerserver.business.service;
 
 
-import dev.patika.customerserver.api.exceptions.UnimplementedFunctionException;
 import dev.patika.customerserver.business.dto.BaseDto;
-import dev.patika.customerserver.entities.BaseEntity;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface BaseService<T extends BaseDto,E> {
+public interface BaseService<T extends BaseDto,E,I> {
     List<E> findAll();
-    E findById(long id);
+    E findById(I id);
 
     E save(E object);
 
     default E update(E object){
-        throw new UnimplementedFunctionException();
+        throw new NotImplementedException();
     }
 
     default E delete(E object){
-        throw new UnimplementedFunctionException();
+        throw new NotImplementedException();
     }
 
     T toDto(E e);

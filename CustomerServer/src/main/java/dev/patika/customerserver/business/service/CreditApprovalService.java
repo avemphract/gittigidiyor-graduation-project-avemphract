@@ -1,15 +1,11 @@
 package dev.patika.customerserver.business.service;
 
+import dev.patika.customerserver.api.exceptions.CreditApplicationCustomerNullException;
 import dev.patika.customerserver.api.exceptions.EntityAlreadyExistsException;
 import dev.patika.customerserver.api.exceptions.EntityNotFoundException;
-import dev.patika.customerserver.business.dto.BaseDto;
 import dev.patika.customerserver.business.dto.CreditApprovalDto;
-import dev.patika.customerserver.business.dto.MessageDto;
 import dev.patika.customerserver.business.mapper.CreditApprovalMapper;
-import dev.patika.customerserver.business.mapper.MessageMapper;
-import dev.patika.customerserver.entities.BaseEntity;
 import dev.patika.customerserver.entities.CreditApproval;
-import dev.patika.customerserver.entities.Message;
 import dev.patika.customerserver.repositories.CreditApprovalRepository;
 import dev.patika.customerserver.utils.MessageFactory;
 import dev.patika.customerserver.utils.RequestInfo;
@@ -22,21 +18,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CreditApprovalService implements BaseService<CreditApprovalDto,CreditApproval> {
+public class CreditApprovalService implements BaseService<CreditApprovalDto,CreditApproval,Long> {
     private final CreditApprovalRepository creditApprovalRepository;
     private final MessageService messageService;
     private final MessageFactory messageFactory;
+    private final RequestInfo requestInfo;
 
     @Autowired
     private CreditApprovalMapper mapper;
-    @Autowired
-    private RequestInfo requestInfo;
 
     @Autowired
-    public CreditApprovalService(CreditApprovalRepository creditApprovalRepository, MessageService messageService, MessageFactory messageFactory) {
+    public CreditApprovalService(CreditApprovalRepository creditApprovalRepository, MessageService messageService, MessageFactory messageFactory, RequestInfo requestInfo) {
         this.creditApprovalRepository = creditApprovalRepository;
         this.messageService=messageService;
         this.messageFactory=messageFactory;
+        this.requestInfo=requestInfo;
     }
 
     @Override
@@ -49,9 +45,14 @@ public class CreditApprovalService implements BaseService<CreditApprovalDto,Cred
 
     @Override
     @Transactional(readOnly = true)
-    public CreditApproval findById(long id) {
+    public CreditApproval findById(Long id) {
         Optional<CreditApproval> optional=creditApprovalRepository.findById(id);
         return optional.orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CreditApproval> findByCustomer(Long tc) {
+        return creditApprovalRepository.findByCustomerTc(tc);
     }
 
     @Override
@@ -59,6 +60,8 @@ public class CreditApprovalService implements BaseService<CreditApprovalDto,Cred
     public CreditApproval save(CreditApproval creditApproval) {
         if (creditApprovalRepository.isExistById(creditApproval.getId()))
             throw new EntityAlreadyExistsException(creditApproval.getId()+" id is already registered in creditApproval table");
+        if (creditApproval.getCustomer()==null)
+            throw new CreditApplicationCustomerNullException("Credit application must have a customer");
         messageService.save(messageFactory.createCreditApprovalMessage(creditApproval.isApproval(), creditApproval.getCustomer().getPhoneNumber(),creditApproval.getGivenCreditAmount()));
         creditApproval.setClientUrl(requestInfo.getClientUrl());
         creditApproval.setSessionId(requestInfo.getSessionId());
@@ -71,6 +74,8 @@ public class CreditApprovalService implements BaseService<CreditApprovalDto,Cred
     public CreditApproval update(CreditApproval creditApproval) {
         if (!creditApprovalRepository.isExistById(creditApproval.getId()))
             throw new EntityNotFoundException(creditApproval.getId()+" id has not found in creditApproval table");
+        if (creditApproval.getCustomer()==null)
+            throw new CreditApplicationCustomerNullException("Credit application must have a customer");
         return creditApprovalRepository.save(creditApproval);
     }
 
@@ -92,4 +97,6 @@ public class CreditApprovalService implements BaseService<CreditApprovalDto,Cred
     public CreditApproval toEntity(CreditApprovalDto baseDto) {
         return mapper.toEntity(baseDto);
     }
+
+
 }

@@ -33,6 +33,11 @@ public class CustomerController implements BaseController<CustomerDto,Long> {
         return ResponseEntity.ok(customerService.toDto(customerService.findById(id)));
     }
 
+    @GetMapping("/tc/{tc}")
+    public ResponseEntity<CustomerDto> findByCustomer(@PathVariable Long tc){
+        return ResponseEntity.ok(customerService.toDto(customerService.findByTcNumber(tc)));
+    }
+
     @PostMapping("/creditApplication")
     public ResponseEntity<CreditApprovalDto> creditApplication(@RequestBody CustomerDto customerDto){
         return ResponseEntity.ok(customerService.creditApplication(customerService.toEntity(customerDto)));

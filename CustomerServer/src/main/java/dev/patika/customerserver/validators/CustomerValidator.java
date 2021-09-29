@@ -8,9 +8,16 @@ public class CustomerValidator {
     public static String nameSurnameValidator(String name, Type type) {
         if (name.isEmpty())
             throw new NotValidCustomerNameException(type.toString + " can not be empty");
+        boolean allCharsAreSpace=true;
         for (char c : name.toCharArray()) {
-            if (!Character.isLetter(c) && c != ' ')
+            if (!Character.isLetter(c) && c != ' ') {
                 throw new NotValidCustomerNameException(type.toString + " has invalid character. Invalid character is '" + c + "'");
+            }
+            if (Character.isLetter(c))
+                allCharsAreSpace=false;
+        }
+        if(allCharsAreSpace){
+            throw new NotValidCustomerNameException(type.toString + " only contains space");
         }
         String[] words = name.split(" ");
         for (int i = 0; i < words.length; i++) {

@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CreditApprovalRepository extends CrudRepository<CreditApproval, Long> {
 
@@ -12,4 +14,7 @@ public interface CreditApprovalRepository extends CrudRepository<CreditApproval,
             "FROM CreditApproval AS c " +
             "WHERE c.id=?1")
     boolean isExistById(long id);
+
+    @Query("SELECT c FROM CreditApproval AS c WHERE c.customer.tcNumber=?1")
+    List<CreditApproval> findByCustomerTc(long tc);
 }

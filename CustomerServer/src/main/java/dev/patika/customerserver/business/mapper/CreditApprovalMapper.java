@@ -4,17 +4,20 @@ import dev.patika.customerserver.business.dto.CreditApprovalDto;
 import dev.patika.customerserver.business.service.CreditApprovalService;
 import dev.patika.customerserver.business.service.CustomerService;
 import dev.patika.customerserver.entities.CreditApproval;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public abstract class CreditApprovalMapper {
     @Autowired
     protected CustomerService customerService;
-    @Autowired
-    protected CustomerMapper customerMapper;
+
+    public void setCustomerService(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @Mappings({
             @Mapping(target = "customerTcNumber",expression = "java(creditApproval.getCustomer().getTcNumber())")

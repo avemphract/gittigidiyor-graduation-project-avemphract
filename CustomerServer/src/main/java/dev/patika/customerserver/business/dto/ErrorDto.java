@@ -10,7 +10,6 @@ public class ErrorDto extends BaseDto{
     private Instant createDate;
 
     private int errorCode;
-    private String errorClass;
     private String errorMessage;
 
     private String errorUrl;

@@ -44,7 +44,7 @@ cd CustomerServer
 mvn spring-boot:run
 ```
 ***Start services with docker***
-* Firstly it has need built the project, for run with docker.
+* Firstly the project has need to be built, for run with docker.
 ```bash
 mvn clean install
 docker-compose -f docker-compose.yaml up -d
@@ -57,7 +57,7 @@ The app uses
 * PORT:8082 credit-score-server 
 * PORT:8083 customer-server  
 
-For the application to stand up in a healthy way, make sure these ports are not used.
+*For the application to stand up healthy, make sure these ports are not used.*
 
 
 ## Endpoints
@@ -98,8 +98,8 @@ For the application to stand up in a healthy way, make sure these ports are not 
 
 ## Other internal links
 #### Customer Service other
-* http://localhost:8083/swagger-ui.html#/ Swagger UI
-* http://localhost:8083/h2-console
+* [Swagger UI](http://localhost:8083/swagger-ui.html#/) `http://localhost:8083/swagger-ui.html#/`
+* [H2 Database](http://localhost:8083/h2-console) `http://localhost:8083/h2-console`
   ```bash
   url=jdbc:h2:mem:testdb
   driverClassName=org.h2.Driver
@@ -108,17 +108,20 @@ For the application to stand up in a healthy way, make sure these ports are not 
   ```
 
 #### Credit Score Service other
-* http://localhost:8082/swagger-ui.html#/ Swagger UI
-* http://localhost8082/h2-console
+* [Swagger UI](http://localhost:8082/swagger-ui.html#/) `http://localhost:8082/swagger-ui.html#/`
+* [H2 Database](http://localhost8082/h2-console) `http://localhost8082/h2-console`
   ```bash
-  spring.datasource.url=jdbc:h2:mem:testdb
-  spring.datasource.driverClassName=org.h2.Driver
-  spring.datasource.username=sa
-  spring.datasource.password=
+  url=jdbc:h2:mem:testdb
+  driverClassName=org.h2.Driver
+  username=sa
+  password=
   ```
 
 #### Eureka Server
-* http://localhost:8761/ Spring Eureka
+* [Spring Eureka](http://localhost:8761/) `http://localhost:8761/`
+#### Mongo Express
+* [Mongo Express](http://localhost:8081/) `http://localhost:8081/`
+
 ## Author
 **Emre Çatalkaya**
 [github/avemphract](https://github.com/avemphract)

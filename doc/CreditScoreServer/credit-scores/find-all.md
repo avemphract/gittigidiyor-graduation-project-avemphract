@@ -1,6 +1,6 @@
 # Find All Credit Scores
 
-Returns all saved persons who.
+Returns all saved people.
 
 **URL** : `http://localhost:8082/api/creditScores`
 

@@ -4,7 +4,7 @@ Delete to given credit approval.
 
 **URL** : `http://localhost:8083/api/creditApprovals`
 
-**Method** : `DELETE~~~~`
+**Method** : `DELETE`
 
 **Request Params**
 

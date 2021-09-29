@@ -18,7 +18,7 @@ Returns all customers.
 [
   {
     "creditApprovalsId": [
-      0
+      1
     ],
     "name": "string",
     "phoneNumber": 0,

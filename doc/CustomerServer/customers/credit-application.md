@@ -10,9 +10,6 @@ Apply to credit with given customer.
 
 ```json
 {
-  "creditApprovalsId": [
-    0
-  ],
   "name": "string",
   "phoneNumber": 0,
   "salary": 0,
